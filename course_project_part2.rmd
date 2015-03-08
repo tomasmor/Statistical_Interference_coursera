@@ -1,0 +1,50 @@
+---
+title: "course_project_part2.rmd"
+author: "Olga Sentemova"
+date: "22 Feb 2015"
+output: pdf_document
+---
+
+Dataset ToothGrowth contains 60 observation of 3 variables: length of teeth, supplement method (factor with 2 levels "OJ" and "VC") and dose of vitamin C with 3 meanings.
+
+```{r}
+library(ggplot2)
+library(datasets)
+str(ToothGrowth)
+```
+```{r}
+summary(ToothGrowth)
+```
+Lets plot our data for each of methods.
+
+```{r}
+ggplot(data=ToothGrowth, aes(x=as.factor(dose), y=len)) + 
+  geom_bar(stat="identity",position=position_dodge()) +
+    facet_grid(. ~ supp) +
+    xlab("Dose") +
+    ylab("Length")
+```
+
+Trying to investigate if supplement method affects on lenght of tooth. For this purpose we will use t-tests. 
+```{r}
+t.test(ToothGrowth$len[ToothGrowth$supp=="VC"], ToothGrowth$len[ToothGrowth$supp=="OJ"], 
+       paired = FALSE, var.equal = FALSE)
+```
+
+As we can see we cant accept this hypothesis based on this test. So we should create 2-sample t-test.
+
+```{r}
+t.test(ToothGrowth$len[ToothGrowth$dose==0.5], ToothGrowth$len[ToothGrowth$dose==1], 
+       paired = FALSE, var.equal = TRUE)
+```
+
+```{r}
+t.test(ToothGrowth$len[ToothGrowth$dose==0.5], ToothGrowth$len[ToothGrowth$dose==2], 
+       paired = FALSE, var.equal = TRUE)
+```
+
+```{r}
+t.test(ToothGrowth$len[ToothGrowth$dose==2], ToothGrowth$len[ToothGrowth$dose==1], 
+       paired = FALSE, var.equal = TRUE)
+```
+p in this tests less than 0.05 so we can say that dose of c-vitamin has affort to length of teeth.

@@ -1,0 +1,46 @@
+---
+title: "course_project_part1"
+author: "Olga Sentemova"
+date: "22 Feb 2015"
+output: pdf_document
+---
+
+In this exercise exponential distribution `rexp(n, lambda)` will be simulated. We set `lambda = 0.2`. The mean and standart deviation of exponential distribution is `1/lambda`. In this exerscise we investigate distribution of averages of 40 exponentials. 
+```{r}
+set.seed(100)
+lambda <- 0.2
+number_of_simulations <- 1000
+sample_size <- 40
+simulations <- replicate(number_of_simulations, rexp(sample_size, lambda))
+```
+
+`simulations` is sample of iids. Let's check mean of this samples and the mean of the means:
+```{r} 
+simulation_means <- colMeans(simulations)
+total_mean <- mean(simulation_means)
+total_mean
+```
+According to theory mean should be
+```{r}
+analytical_mean <- 1/lambda
+analytical_mean
+```
+Lets check standart deviation.
+Standart deviation for simulation results will be:
+```{r}
+simulation_standart_deviation <- sd(simulation_means)
+simulation_standart_deviation
+```
+Standart deviation for analytical results will be:
+```{r}
+analytic_standart_deviation <- (1/lambda) * 1/sqrt(sample_size) 
+analytic_standart_deviation
+```
+So we can say that theoretical mean concurs simulation mean and theoretical standart deviation occurs simulation standart deviation.
+
+According to CLT distribution of means exponentials should be close to normal. We will demonstrate it using q-q plots.
+
+```{r, echo=FALSE}
+qqnorm(simulation_means)
+qqline(simulation_means)
+```
